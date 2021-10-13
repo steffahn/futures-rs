@@ -829,10 +829,10 @@ pub trait TryStreamExt: TryStream {
     ///
     ///     let mut buffered = stream_of_futures.try_buffered(10);
     ///
-    ///     assert!(buffered.try_poll_next_unpin(cx).is_pending());
+    ///     assert!(buffered.poll_next_unpin(cx).is_pending());
     ///
     ///     send_two.send(2i32)?;
-    ///     assert!(buffered.try_poll_next_unpin(cx).is_pending());
+    ///     assert!(buffered.poll_next_unpin(cx).is_pending());
     ///     Ok::<_, i32>(buffered)
     /// }).await?;
     ///
@@ -871,20 +871,6 @@ pub trait TryStreamExt: TryStream {
             self,
             n.into(),
         ))
-    }
-
-    // TODO: false positive warning from rustdoc. Verify once #43466 settles
-    //
-    /// A convenience method for calling [`TryStream::try_poll_next`] on [`Unpin`]
-    /// stream types.
-    fn try_poll_next_unpin(
-        &mut self,
-        cx: &mut Context<'_>,
-    ) -> Poll<Option<Result<Self::Ok, Self::Error>>>
-    where
-        Self: Unpin,
-    {
-        Pin::new(self).try_poll_next(cx)
     }
 
     /// Wraps a [`TryStream`] into a stream compatible with libraries using

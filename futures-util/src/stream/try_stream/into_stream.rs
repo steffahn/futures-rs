@@ -35,7 +35,7 @@ impl<St: TryStream> Stream for IntoStream<St> {
 
     #[inline]
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        self.project().stream.try_poll_next(cx)
+        self.project().stream.poll_next(cx)
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {

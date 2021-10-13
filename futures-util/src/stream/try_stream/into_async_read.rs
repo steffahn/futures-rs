@@ -1,4 +1,4 @@
-use crate::stream::TryStreamExt;
+use crate::stream::StreamExt;
 use core::pin::Pin;
 use futures_core::ready;
 use futures_core::stream::TryStream;
@@ -69,7 +69,7 @@ where
 
                     return Poll::Ready(Ok(len));
                 }
-                ReadState::PendingChunk => match ready!(self.stream.try_poll_next_unpin(cx)) {
+                ReadState::PendingChunk => match ready!(self.stream.poll_next_unpin(cx)) {
                     Some(Ok(chunk)) => {
                         if !chunk.as_ref().is_empty() {
                             self.state = ReadState::Ready { chunk, chunk_start: 0 };
@@ -121,7 +121,7 @@ where
 {
     fn poll_fill_buf(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<&[u8]>> {
         while let ReadState::PendingChunk = self.state {
-            match ready!(self.stream.try_poll_next_unpin(cx)) {
+            match ready!(self.stream.poll_next_unpin(cx)) {
                 Some(Ok(chunk)) => {
                     if !chunk.as_ref().is_empty() {
                         self.state = ReadState::Ready { chunk, chunk_start: 0 };

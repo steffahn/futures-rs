@@ -62,7 +62,7 @@ where
                 let item = ready!(fut.try_poll(cx));
                 this.future.set(None);
                 break Some(item);
-            } else if let Some(item) = ready!(this.stream.as_mut().try_poll_next(cx)?) {
+            } else if let Some(item) = ready!(this.stream.as_mut().poll_next(cx)?) {
                 this.future.set(Some((this.f)(item)));
             } else {
                 break None;

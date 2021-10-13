@@ -73,7 +73,7 @@ where
                 if item.is_some() {
                     break item.map(Ok);
                 }
-            } else if let Some(item) = ready!(this.stream.as_mut().try_poll_next(cx)?) {
+            } else if let Some(item) = ready!(this.stream.as_mut().poll_next(cx)?) {
                 // No item in progress, but the stream is still going
                 this.pending.set(Some((this.f)(item)));
             } else {

@@ -63,7 +63,7 @@ where
                 this.future.set(None);
                 break Some(item);
             } else {
-                match ready!(this.stream.as_mut().try_poll_next(cx)) {
+                match ready!(this.stream.as_mut().poll_next(cx)) {
                     Some(Ok(item)) => break Some(Ok(item)),
                     Some(Err(e)) => {
                         this.future.set(Some((this.f)(e)));

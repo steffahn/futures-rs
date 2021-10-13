@@ -95,7 +95,7 @@ where
                     }
                 },
                 TryFlattenProj::Second { f } => {
-                    let output = ready!(f.try_poll_next(cx));
+                    let output = ready!(f.poll_next(cx));
                     if output.is_none() {
                         self.set(Self::Empty);
                     }
